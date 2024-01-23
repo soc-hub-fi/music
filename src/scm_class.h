@@ -1,14 +1,8 @@
-// scm_class.h - Sensor Covariance Matrix (SCM) hierarchical block
-// 
-// Author: Tuomas Aaltonen : tuomas.aaltonen@tuni.fi
-//
-
 #ifndef SCM_CLASS_H
 #define SCM_CLASS_H
 
 #include "defs.h"
-
-#include "Vector_Matrix_Ops_class.h"
+#include "Music_Matrix_Class.h"
 
 #pragma design
 class SCM_class
@@ -19,17 +13,14 @@ private:
     //Store accumulated covariance matrix
     rxxStruct_t outStruct;
 
-    //Matrix multiply instance
-    matrix_x_matrix_multiply_class<scm_in_cpx_t,scm_in_cpx_t,scm_acc_cpx_t,
-                                    scm_res_cpx_t,RX_ROWS_SLICE,RX_COLS_SLICE,
-                                    RX_ROWS_SLICE,RX_COLS_SLICE,RXX_SIZE,RXX_SIZE,
-                                    false,true> Mult_inst;
+    //Symmetric matrix multiplication instance
+    sym_covar_mult_class<scm_in_cpx_t,scm_in_cpx_t,scm_acc_cpx_t,scm_res_cpx_t,
+                        RX_ROWS_SLICE,RX_COLS_SLICE> Sym_mult_inst;
 
 public:
 
     SCM_class()
     {
-        //Init covariance matrix to zero
         ac::init_array<AC_VAL_0>(&outStruct.data[0][0],RXX_SIZE*RXX_SIZE);
     };
 
@@ -44,19 +35,19 @@ public:
                 ac_channel<rxxStruct_t> &dataOut_ch)
 #endif
     {
-        //Read data if available
+        //Read data when available
         if(dataIn_ch.available(1)){
 
-            //Channel data read
+            //Data read
             inStruct_t inData = dataIn_ch.read();
 
-            //Matrix multiplication result
+            //Result of matrix multiplication
             scm_res_cpx_t RXX_MTX[RXX_SIZE][RXX_SIZE];
 
             //Matrix multiplication
-            Mult_inst.Product(inData.data,inData.data,RXX_MTX);
+            Sym_mult_inst.sym_mult(inData.data,inData.data,RXX_MTX);
 
-            //Store accumulated result
+            //Accumulate result
             #pragma hls_unroll yes
             ACCUM_ROWS: for(int i=0; i<RXX_SIZE; i++){
                 #pragma hls_unroll yes
