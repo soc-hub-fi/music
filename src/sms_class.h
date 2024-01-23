@@ -1,14 +1,13 @@
-// sms_class.h - Spectral Maximum Search (SMS) hierarchical block
-// 
+//sms_class.h - Spectral Maximum Search (SMS) hierarchical block
+//
 // Author: Tuomas Aaltonen : tuomas.aaltonen@tuni.fi
 //
 
 #ifndef SMS_CLASS_H
 #define SMS_CLASS_H
 
-#include "defs.h"
 
-//#include "matrix_mani.h"
+#include "defs.h"
 #include "Vector_Matrix_Ops_class.h"
 
 #include <mc_scverify.h>
@@ -25,7 +24,8 @@ class SMS_class
                                     sms_res_cpx_t,MANIFOLD_TP_ROWS,MANIFOLD_TP_COLS,UN_ROWS,UN_COLS,MANIFOLD_TP_ROWS,UN_COLS,
                                     false,false> Mult_res_inst;
 
-        #include "matrix_mani.h"
+	//
+	#include "matrix_mani.h"
 
     public:
 
@@ -47,13 +47,14 @@ class SMS_class
 
             if(dataIn_ch.available(1))
             {
-                //Channel data read
+
+                //Channel read
                 nssStruct_t inData = dataIn_ch.read();
 
                 //Matrix multiplication
                 sms_res_cpx_t RES_MTX[MANIFOLD_TP_ROWS][UN_COLS];
                 Mult_res_inst.Product(MANI_MTX,inData.data,RES_MTX);
-                
+
                 //First result of min. search
                 sms_sum_t col_sum = 0;
                 sms_min_t min_val = 0;
@@ -68,8 +69,7 @@ class SMS_class
                 sms_min_t min_sum = col_sum;
                 sms_index_t index = 0;
 
-                //Find smallest value and index of remaining data
-                //#pragma hls_unroll yes
+                //Find smallest value index of remaining data
                 ROW_SCAN: for(int i=1; i<MANIFOLD_TP_ROWS; i++){
 
                     col_sum = 0;
@@ -77,12 +77,13 @@ class SMS_class
                     //Columnwise summation
                     #pragma hls_unroll yes
                     COL_SUM:for(int j=0; j<UN_COLS; j++){
+
                         sms_res_cpx_t tmp_val = RES_MTX[i][j];
                         min_val = tmp_val.real()*tmp_val.real()+tmp_val.imag()*tmp_val.imag();
                         col_sum += min_val;
                     }
-
-                    //Set new minimum value index if found
+                    
+                    //Set new minimum
                     if(col_sum < min_sum){
                         min_sum = col_sum;
                         index = i;
@@ -90,10 +91,10 @@ class SMS_class
 
                 }
 
-                //Adjust index to angle search range (0-181) -> (-90-90)
+                //Adjust index to angle search range
                 sms_out_t angle = index - 90;
 
-                //Write output
+                //Output write
                 dataOut_ch.write(angle);
 
             }//if dataIn_ch available
