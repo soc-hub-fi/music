@@ -1,18 +1,17 @@
 // ijm_class.h - Iterative Jacobi Method (IJM) hierarchical block
-// 
-// Author: Tuomas Aaltonen : tuomas.aaltonen@tuni.fi
 //
-
+// Author: Tuomas Aaltonen - tuomas.aaltonen@tuni.fi
+//
 
 #ifndef IJM_CLASS_H
 #define IJM_CLASS_H
 
 #include "ijm_ccore_pt1.h"
 #include "ijm_ccore_pt2.h"
+#include "Music_Matrix_Class.h"
 
 #include "max_search.h"
 #include "defs.h"
-#include "Vector_Matrix_Ops_class.h"
 #include <mc_scverify.h>
 
 #pragma design
@@ -25,20 +24,16 @@ class IJM_class
         ijm_ccore_pt2 ijm_ccore_inst2;
 
         //Matrix multiplication instances
-        matrix_x_matrix_multiply_class<ijm_r_cpx_t,ijm_out_val_cpx_t,ijm_tmp_accu_cpx_t,
-                                    ijm_tmp_cpx_t,RXX_SIZE,RXX_SIZE,RXX_SIZE,RXX_SIZE,RXX_SIZE,RXX_SIZE,
-                                    false,false> Mult_tmp_inst;
+        unitary_left_mult_class<ijm_r_cpx_t,ijm_out_val_cpx_t,ijm_tmp_accu_cpx_t,ijm_tmp_cpx_t,
+                                RXX_SIZE> Left_mult_val_inst;
 
-        matrix_x_matrix_multiply_class<ijm_tmp_cpx_t,ijm_r_cpx_t,ijm_val_accu_cpx_t,
-                                    ijm_out_val_cpx_t,RXX_SIZE,RXX_SIZE,RXX_SIZE,RXX_SIZE,RXX_SIZE,RXX_SIZE,
-                                    false,true> Mult_eigval_inst;
+        unitary_right_mult_class<ijm_tmp_cpx_t,ijm_r_cpx_t,ijm_val_accu_cpx_t,ijm_out_val_cpx_t, 
+                                RXX_SIZE> Right_mult_val_inst;
 
-        matrix_x_matrix_multiply_class<ijm_out_vec_cpx_t,ijm_r_cpx_t,ijm_vec_accu_cpx_t,
-                                    ijm_out_vec_cpx_t,RXX_SIZE,RXX_SIZE,RXX_SIZE,RXX_SIZE,RXX_SIZE,RXX_SIZE,
-                                    false,true> Mult_eigvec_inst;
+        unitary_right_mult_class<ijm_out_vec_cpx_t,ijm_r_cpx_t,ijm_vec_accu_cpx_t,ijm_out_vec_cpx_t,
+                                RXX_SIZE> Right_mult_vec_inst;
 
     public:
-
         IJM_class() {};
 
 #ifdef MUSIC_DEBUG
@@ -61,7 +56,7 @@ class IJM_class
             ijm_out_val_cpx_t EIGVAL_MTX[RXX_SIZE][RXX_SIZE];
             ijm_out_vec_cpx_t EIGVEC_MTX[RXX_SIZE][RXX_SIZE];
 
-            //Init Eigenvalue matrix to covariance matrix
+            //Init eigenvalue matrix to covariance matrix
             #pragma hls_unroll yes
             UNPACK_ROWS: for(int i=0; i<RXX_SIZE; i++){
                 #pragma hls_unroll yes
@@ -70,7 +65,7 @@ class IJM_class
                 }
             }
 
-            //Init Eigenvector matrix
+            //Init eigenvector matrix to identity
             #pragma hls_unroll yes
             INIT_VEC_ROWS: for(int i=0; i<RXX_SIZE; i++){
                 #pragma hls_unroll yes
@@ -83,9 +78,8 @@ class IJM_class
                 }
             }
 
-            //Iterative Jacobi method
+            //Iterative jacobi method
             JACOBI_LOOP: for(int iter=0; iter<MAX_ITER; iter++){
-
 
                 ijm_rxx_idx_t row_idx;
                 ijm_rxx_idx_t col_idx;
@@ -109,18 +103,18 @@ class IJM_class
                 //Rotation matrix creation
                 ijm_ccore_inst2.run(EIGVAL_MTX,R_MTX,row_idx,col_idx,max_val);
 
-                //Intermediate result matrix
+                //Intermediate matrix mult. result
                 ijm_tmp_cpx_t TMP_MTX[RXX_SIZE][RXX_SIZE];
 
-                //Rotation transformations
+                //APPLY ROTATION TRANSFORMATIONS
                 //EIGVAL = R x EIGVAL x R'
-                Mult_tmp_inst.Product(R_MTX,EIGVAL_MTX,TMP_MTX);
-                Mult_eigval_inst.Product(TMP_MTX,R_MTX,EIGVAL_MTX);
+                Left_mult_val_inst.left_mult(row_idx,col_idx,R_MTX,EIGVAL_MTX,TMP_MTX);
+                Right_mult_val_inst.right_mult(row_idx,col_idx,TMP_MTX,R_MTX,EIGVAL_MTX);
 
-                //EIGVEC_TMP for intermediate result to avoid MUXing
+                //Intermediate matrix mult. result
                 ijm_out_vec_cpx_t EIGVEC_TMP[RXX_SIZE][RXX_SIZE];
                 //EIGVEC = EIGVEC x R'
-                Mult_eigvec_inst.Product(EIGVEC_MTX,R_MTX,EIGVEC_TMP);
+                Right_mult_vec_inst.right_mult(row_idx,col_idx,EIGVEC_MTX,R_MTX,EIGVEC_TMP);
 
                 //Assign values from temporary matrix
                 #pragma hls_unroll yes
