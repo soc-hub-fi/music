@@ -3,15 +3,15 @@
 
 #include "defs.h"
 
-//Store max. value and row/column indices
+//Store max. value, row, and column indices
 struct element_struct{
     ijm_diag_max_t val;
     ijm_rxx_idx_t r;
     ijm_rxx_idx_t c;
 };
 
-//Tree structure recursive template search
-//High-level synthesis Blue Book Ex. 6-22
+//Recuresive template search
+//High-level synthesis blue book Ex. 6-22
 template<int N> struct max_s{
 
     static element_struct max(element_struct *a){

@@ -1,5 +1,5 @@
 // ijm_ccore_pt1.h - CCORE for off-diagonal max. search
-// 
+//
 // Author: Tuomas Aaltonen : tuomas.aaltonen@tuni.fi
 //
 
@@ -13,6 +13,7 @@
 class ijm_ccore_pt1
 {
     private:
+
 
         //Off-diagonal search values
         void searchArrayCreate(ijm_out_val_cpx_t EIGVAL_MTX[RXX_SIZE][RXX_SIZE],
@@ -29,6 +30,9 @@ class ijm_ccore_pt1
                     ijm_a_t tmp_r = EIGVAL_MTX[i][j].real();
                     ijm_b_t tmp_i = EIGVAL_MTX[i][j].imag();
 
+                    ijm_diag_max_t tmp_max = 0;
+                    tmp_max = tmp_r*tmp_r+tmp_i*tmp_i;
+
                     tmp_s.val = tmp_r*tmp_r+tmp_i*tmp_i;
                     tmp_s.r = i;
                     tmp_s.c = j;
@@ -40,7 +44,7 @@ class ijm_ccore_pt1
         }
 
         //Off-diagonal max. search
-        //Store values and indices
+        //Value and indices
         void offDiagMax(element_struct SEARCH_ARRAY[IJM_SEARCH_NUM],
                         ijm_diag_max_t &max_val,ijm_rxx_idx_t &r_idx,
                         ijm_rxx_idx_t &c_idx)
@@ -53,7 +57,6 @@ class ijm_ccore_pt1
         }
 
     public:
-
         ijm_ccore_pt1() {};
 
         #pragma hls_design interface ccore
@@ -68,7 +71,7 @@ class ijm_ccore_pt1
 
             //Create search array
             searchArrayCreate(EIGVAL_MTX,SEARCH_ARRAY);
-            //Find off-diagonal max
+            //Find off-diagonal max and indices
             offDiagMax(SEARCH_ARRAY,max_val,row_idx,col_idx);
 
             //Check convergence

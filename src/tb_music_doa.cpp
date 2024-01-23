@@ -1,14 +1,13 @@
 // tb_music_doa.cpp - Testbench for MUSIC
-// 
+//
 // Author: Tuomas Aaltonen : tuomas.aaltonen@tuni.fi
 //
 
 #include "defs.h"
 #include "music_top_class.h"
-
 #include <mc_scverify.h>
 
-//Test data
+//Test data read from file
 matrix loadMatrixFile(const char* filename, int rows, int cols,double scale);
 
 CCS_MAIN(int argc, char *argv[]){
@@ -31,28 +30,26 @@ CCS_MAIN(int argc, char *argv[]){
     eigenStruct_t IJMDbgData;
     nssStruct_t NSSDbgData;
 
-    //Dut, golden reference instances
+    //DUT instance
     music_top_class DUT;
 
     //Input data
     std::string name_s = "data256/testi";
     std::string name_e = ".txt";
 
-    //File for output data
-    /*
-    FILE *doaFile;
-    doaFile = fopen("doa_outdata.txt","w");
-    if(doaFile == NULL)
-    {
-        std::cout << "Could not open doa output file" << std::endl;
-    }
-    */
+    //Output file for estimates
+    //FILE *doaFile;
+    //doaFile = fopen("/opt/soc/work/aaltonet/Catapult/MUSIC_DDECS/music_256_sym/doa_data.txt","w");
+    //if(doaFile == NULL)
+    //{
+    //    std::cout << "Could not open doa output file" << std::endl;
+    //}
 
-    //Iterate through sample datasets
+    //Iterate through datasets
     for(int i=1; i<SAMPLE_NUM+1; i++)
     {
 
-    //Read signal data from file
+    //Read data from file
     std::string tmp_s = name_s+std::to_string(i)+name_e;
     const char *c = tmp_s.c_str();
     matrix data = loadMatrixFile(c,RX_ROWS,RX_COLS,0.1);
@@ -79,7 +76,7 @@ CCS_MAIN(int argc, char *argv[]){
 
         inChan.write(inData);
 
-//Ouput/Debug data
+//Output/Debug data
 #ifdef MUSIC_DEBUG
         //GET DOA ESTIMATE
         DUT.run(inChan,SCMDbgChan,IJMDbgChan,NSSDbgChan,outChan);
@@ -102,6 +99,7 @@ CCS_MAIN(int argc, char *argv[]){
                     SCMDbgData.data[i][j].r().to_double() << " " << SCMDbgData.data[i][j].i().to_double() << std::endl;
                 }
             }
+
         }
 
         if(IJMDbgChan.available(1)){
@@ -111,7 +109,7 @@ CCS_MAIN(int argc, char *argv[]){
             std::cout << "EIGVAL" << std::endl;
             for(int i=0; i<RXX_SIZE; i++){
                 std::cout << std::fixed << std::setprecision(PRECI) << "Index [" << i << "]: " <<
-                IJMDbgData.val_data[i].to_double()  << std::endl;
+                IJMDbgData.val_data[i].to_double() << std::endl;
             }
 
             std::cout << "EIGVEC" << std::endl;
@@ -131,7 +129,7 @@ CCS_MAIN(int argc, char *argv[]){
             for(int i=0; i<UN_ROWS; i++){
                 for(int j=0; j<UN_COLS; j++){
                     std::cout << std::fixed << std::setprecision(PRECI) << "Index [" << i << j << "]: " <<
-                    NSSDbgData.data[i][j].r().to_double() << std::endl;
+                    NSSDbgData.data[i][j].r().to_double() << " " << NSSDbgData.data[i][j].i().to_double() << std::endl;
                 }
             }
 
@@ -141,23 +139,24 @@ CCS_MAIN(int argc, char *argv[]){
 
             outData = outChan.read();
 
-            std::cout << "DOA: " << outData << std::endl;
+            std::cout << "DOA: " << outData  << std::endl;
 
             //Write output into file
             //fprintf(doaFile,"%d\n",outData);
 
-        }//End if
+        }//END if
 
-    } //End COLS
+    } //END for COLUMNS
 
-    }//End SAMPLE_NUM
+    }//END for SAMPLE_NUM
 
     //fclose(doaFile); //DoA estimates
     CCS_RETURN(0);
+    //return 0;
 
 }//END main
 
-//Data read from file, scale to appropriate data range
+
 matrix loadMatrixFile(const char* filename, int rows, int cols,double scale){
 
     matrix mat;
@@ -175,6 +174,7 @@ matrix loadMatrixFile(const char* filename, int rows, int cols,double scale){
 
     std::vector<std::complex<double>> row;
     std::complex<double> val;
+
 
     for(int i=0; i<rows; i++){
         for(int j=0; j<cols; j++){

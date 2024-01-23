@@ -1,5 +1,5 @@
 // music_top_class.h - Top level hierarchical block
-// 
+//
 // Author: Tuomas Aaltonen : tuomas.aaltonen@tuni.fi
 //
 
@@ -9,6 +9,7 @@
 #include "defs.h"
 
 #include "scm_class.h"
+#include "ijm_class.h"
 #include "sms_class.h"
 #include "nss_class.h"
 #include "nsr_class.h"
@@ -21,8 +22,9 @@ class music_top_class
 
 private:
 
-    //Instantiate sub-block classes
+    //Sub-block class instances
     SCM_class scm_inst;
+    IJM_class ijm_inst;
     SMS_class sms_inst;
     nsr_top_class nsr_inst; //Hierarchy level
 

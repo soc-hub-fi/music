@@ -1,5 +1,5 @@
 // nss_class.h - Noise Subspace Selection (NSS) hierarchical block
-// 
+//
 // Author: Tuomas Aaltonen : tuomas.aaltonen@tuni.fi
 //
 
@@ -15,8 +15,8 @@ class NSS_class
 {
     private:
 
-    public:
 
+    public:
         NSS_class() {};
 
 #ifdef MUSIC_DEBUG
@@ -36,7 +36,7 @@ class NSS_class
                 //Channel data read
                 eigenStruct_t inData = dataIn_ch.read();
 
-                //Init first index, value
+                //Init first index and value
                 ijm_rxx_idx_t max_index = 0;
                 nss_max_val_t max_value = inData.val_data[0];
 
