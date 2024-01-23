@@ -7,8 +7,6 @@
 #define DEFS_H
 
 #include "ac_fixed.h"
-//#include "ovf_ac_fixed.h"
-//#include "ovf_ac_fixed_fns.h"
 #include "ac_math.h"
 #include "ac_float.h"
 #include "ac_complex.h"
@@ -21,41 +19,42 @@
 #include <cmath>
 #include <fstream>
 
-//precisions for std::fixed
+//std::cout precision
 const int PRECI = 15;
 
-//Number of sample data instances
-//const int SAMPLE_NUM = 910;
-const int SAMPLE_NUM = 10;
+//Number of sample data
+const int SAMPLE_NUM = 910;
+//const int SAMPLE_NUM = 10;
 
-//RxData Input sample dimensions
+//Input rows
 const int RX_ROWS = 4;
+//Input columns
 const int RX_COLS = 256;
 
-//Slice of input data fed into DUT
+//Input slice to feed into DUT
 const int RX_ROWS_SLICE = 4;
-const int RX_COLS_SLICE = 1; //one column at a time
+const int RX_COLS_SLICE = 1;
 
 //Jacobi method
 const int RXX_SIZE = 4;
 const int MAX_ITER = 16;
 
-const int IJM_SEARCH_NUM = ((RXX_SIZE-1)*RXX_SIZE)/2; //Number of off-diagonal elements
+const int IJM_SEARCH_NUM = ((RXX_SIZE-1)*RXX_SIZE)/2;
 const int SEARCH_IDX = ac::nbits<IJM_SEARCH_NUM>::val;
 typedef ac_int<SEARCH_IDX,false> ijm_search_idx_t;
 
-const double ERROR_TOLERANCE = 0.005; //Jacobi termination
+const double ERROR_TOLERANCE = 0.005;
 
 //Array manifold dimensions
 const int MANIFOLD_TP_ROWS = 181;
 const int MANIFOLD_TP_COLS = 4;
 
-const int MANIFOLD_ROWS = 4;
-const int MANIFOLD_COLS = 181;
-
 //Noise subspace
 const int UN_ROWS = 4;
 const int UN_COLS = 3;
+
+//const int MANIFOLD_ROWS = 4;
+//const int MANIFOLD_COLS = 181;
 
 const int RXX_IDX = ac::nbits<RXX_SIZE-1>::val;
 typedef ac_int<RXX_IDX,false> ijm_rxx_idx_t;
@@ -72,7 +71,6 @@ typedef ac_int<ANGLE_INDEX,false> sms_index_t;
 
 //Debug flag
 //#define MUSIC_DEBUG
-
 
 //Type definitions
 #define FIXED
@@ -162,8 +160,8 @@ typedef ac_ieee_float64 sms_manifold_t;
 
 //typedef int sms_out_t;
 
-//Fixed-point type definitions
 #else
+
 
 //SCM
 typedef ac_fixed<16,1,true> scm_in_t;
@@ -235,18 +233,16 @@ const int CONSTANT_ONE = 1;
 typedef ac_fixed<18,8,true> nss_max_val_t;
 
 //SMS
-typedef ac_fixed<22,2,true> sms_manifold_accu_t;
+typedef ac_fixed<18,2,true> sms_manifold_accu_t;
 typedef ac_fixed<22,2,true> sms_res_t;
 
-//typedef ac_fixed<24,3,true> sms_sum_t;
-typedef ac_fixed<23,3,false> sms_sum_t;
-typedef ac_fixed<24,4,false> sms_min_t;
+typedef ac_fixed<24,4,false> sms_sum_t;
+typedef ac_fixed<23,3,false> sms_min_t;
 typedef ac_fixed<18,2,true> sms_manifold_t;
 
 
 #endif
 
-//Type independent complex values
 //SCM
 typedef ac_complex<scm_in_t> scm_in_cpx_t;
 typedef ac_complex<scm_out_t> scm_out_cpx_t;
@@ -275,7 +271,7 @@ typedef ac_complex<sms_manifold_t> manifold_cpx_t;
 typedef ac_complex<sms_manifold_accu_t> sms_manifold_accu_cpx_t;
 typedef ac_complex<sms_res_t> sms_res_cpx_t;
 
-//Ac_channel interconnect data structs
+//Ac_channel interconnect data structures
 struct inStruct_t{
     scm_in_cpx_t data[RX_ROWS_SLICE][RX_COLS_SLICE];
     bool rdy_flag;
@@ -296,8 +292,11 @@ struct eigenStruct_t{
 };
 
 
-//Reference data and file read datatypes
+//File read and reference data structures
 typedef std::vector<std::vector<std::complex<double>>> matrix;
 typedef std::vector<std::complex<double>> matrix_row;
+
+//typedef std::vector<std::vector<ac_complex<ac_ieee_float64> > > matrix2;
+//typedef std::vector<ac_complex<ac_ieee_float64> > matrix2_row;
 
 #endif // DEFS_H
