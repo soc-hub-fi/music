@@ -1,6 +1,7 @@
 // ijm_class.h - Iterative Jacobi Method (IJM) hierarchical block
 //
-// Author: Tuomas Aaltonen - tuomas.aaltonen@tuni.fi
+// Author: Tuomas Aaltonen : tuomas.aaltonen@tuni.fi
+// Tampere University - Unit of Computing Sciences - 2024
 //
 
 #ifndef IJM_CLASS_H

@@ -1,6 +1,7 @@
 // music_top_class.h - Top level hierarchical block
 //
 // Author: Tuomas Aaltonen : tuomas.aaltonen@tuni.fi
+// Tampere University - Unit of Computing Sciences - 2024
 //
 
 #ifndef MUSIC_TOP_CLASS_H

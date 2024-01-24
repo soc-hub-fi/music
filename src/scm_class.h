@@ -1,3 +1,9 @@
+// scm_class.h - Sensor Covariance Matrix (SCM) hierarchical block
+//
+// Author: Tuomas Aaltonen : tuomas.aaltonen@tuni.fi
+// Tampere University - Unit of Computing Sciences - 2024
+//
+
 #ifndef SCM_CLASS_H
 #define SCM_CLASS_H
 

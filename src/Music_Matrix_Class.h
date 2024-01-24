@@ -1,6 +1,7 @@
 // Music_Matrix_Class.h - Matrix multiplication for symmetry and sparsity
 //
 // Author: Tuomas Aaltonen : tuomas.aaltonen@tuni.fi
+// Tampere University - Unit of Computing Sciences - 2024
 //
 
 #ifndef MUSIC_MATRIX_CLASS_H

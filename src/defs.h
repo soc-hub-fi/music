@@ -1,6 +1,7 @@
 // defs.h - Type definitions and structures
 // 
 // Author: Tuomas Aaltonen : tuomas.aaltonen@tuni.fi
+// Tampere University - Unit of Computing Sciences - 2024
 //
 
 #ifndef DEFS_H

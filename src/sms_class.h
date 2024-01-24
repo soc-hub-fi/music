@@ -1,6 +1,7 @@
 //sms_class.h - Spectral Maximum Search (SMS) hierarchical block
 //
 // Author: Tuomas Aaltonen : tuomas.aaltonen@tuni.fi
+// Tampere University - Unit of Computing Sciences - 2024
 //
 
 #ifndef SMS_CLASS_H

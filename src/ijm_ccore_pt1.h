@@ -1,6 +1,7 @@
 // ijm_ccore_pt1.h - CCORE for off-diagonal max. search
 //
 // Author: Tuomas Aaltonen : tuomas.aaltonen@tuni.fi
+// Tampere University - Unit of Computing Sciences - 2024
 //
 
 #ifndef IJM_CCORE_PT1_H

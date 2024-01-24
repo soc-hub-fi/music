@@ -1,6 +1,7 @@
 // tb_music_doa.cpp - Testbench for MUSIC
 //
 // Author: Tuomas Aaltonen : tuomas.aaltonen@tuni.fi
+// Tampere University - Unit of Computing Sciences - 2024
 //
 
 #include "defs.h"
@@ -39,7 +40,7 @@ CCS_MAIN(int argc, char *argv[]){
 
     //Output file for estimates
     //FILE *doaFile;
-    //doaFile = fopen("/opt/soc/work/aaltonet/Catapult/MUSIC_DDECS/music_256_sym/doa_data.txt","w");
+    //doaFile = fopen("/doa_data.txt","w");
     //if(doaFile == NULL)
     //{
     //    std::cout << "Could not open doa output file" << std::endl;
@@ -90,7 +91,7 @@ CCS_MAIN(int argc, char *argv[]){
         if(SCMDbgChan.available(1)){
             SCMDbgData = SCMDbgChan.read();
 
-            std::cout << "DUT // (GOLDEN)" << std::endl;
+            std::cout << "DUT" << std::endl;
 
             std::cout << "RXX: " << std::endl;
             for(int i=0; i<RXX_SIZE; i++){

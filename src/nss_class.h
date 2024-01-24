@@ -1,6 +1,7 @@
 // nss_class.h - Noise Subspace Selection (NSS) hierarchical block
 //
 // Author: Tuomas Aaltonen : tuomas.aaltonen@tuni.fi
+// Tampere University - Unit of Computing Sciences - 2024
 //
 
 #ifndef NSS_CLASS_H

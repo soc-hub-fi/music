@@ -1,6 +1,7 @@
 // ijm_ccore_pt2.h - CCORE for rotation matrix creation
 //
 // Author: Tuomas Aaltonen : tuomas.aaltonen@tuni.fi
+// Tampere University - Unit of Computing Sciences - 2024
 //
 
 #ifndef IJM_CCORE_PT2_H

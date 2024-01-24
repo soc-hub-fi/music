@@ -1,6 +1,7 @@
 // nsr_class.h - Noise Subspace Recovery (NSR) hierarchical block
 //
-// Author: tuomas.aaltonen@tuni.fi
+// Author: Tuomas Aaltonen : tuomas.aaltonen@tuni.fi
+// Tampere University - Unit of Computing Sciences - 2024
 //
 
 #ifndef NSR_CLASS_H
